@@ -4,9 +4,6 @@ from io import open
 
 this_directory = path.abspath(path.dirname(__file__))
 
-with open(path.join(this_directory, "requirements.txt"), encoding="utf-8") as f:
-    requirements = f.read().splitlines()
-
 with open(path.join(this_directory, "mt-ehis-core/version.py")) as f:
     exec(f.read())
 
@@ -21,7 +18,7 @@ setup(
     author_email="pokhilenko.alex@gmail.com",
     packages=find_packages(exclude=["test"]),
     platforms=["all"],
-    install_requires=requirements,
+    install_requires=["streamad==0.3.0"],
     include_package_data=True,
     url="https://github.com/MT-EHIS/core",
     setup_requires=["setuptools==58.2.0"],
