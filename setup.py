@@ -4,7 +4,7 @@ from io import open
 
 this_directory = path.abspath(path.dirname(__file__))
 
-with open(path.join(this_directory, "mt-ehis-core/version.py")) as f:
+with open(path.join(this_directory, "mtehis/version.py")) as f:
     exec(f.read())
 
 
