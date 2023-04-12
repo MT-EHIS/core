@@ -1,10 +1,11 @@
 import numpy as np
+from typing import Union
 from streamad.base import BaseDetector
 from streamad.process import ZScoreCalibrator, TDigestCalibrator
 
 
 class ConfiguredDetector:
-    def __init__(self, detector: BaseDetector, calibrator: ZScoreCalibrator | TDigestCalibrator = None,
+    def __init__(self, detector: BaseDetector, calibrator: Union[ZScoreCalibrator, TDigestCalibrator] = None,
                  feature_index: int = None):
         self.detector = detector
         self.calibrator = calibrator

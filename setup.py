@@ -12,7 +12,7 @@ with open(path.join(this_directory, "mt-ehis-core/version.py")) as f:
 
 
 setup(
-    name="mt-ehis-core",
+    name="mtehis",
     version=__version__,
     description="Maintenance Tool for Evolving Hybrid Intelligent Systems: Core Package.",
     long_description=open("./README.md").read(),
