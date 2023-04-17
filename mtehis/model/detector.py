@@ -5,12 +5,14 @@ from streamad.process import ZScoreCalibrator
 from ..data import LearningDetectorData
 from ..base import ConfiguredDetector
 from .classifier import CustomMLPClassifier
+from typing import Callable
 
 
 class LearningDetector:
-    def __init__(self, features_count):
+    def __init__(self, features_count: int, logging_func: Callable[[int], None] = None):
         self.features_count = features_count
         self.detectors = []
+        self.logging_func = logging_func
 
         for name, detector in inspect.getmembers(streamad_models, inspect.isclass):
             if name == 'RandomDetector':
@@ -40,13 +42,23 @@ class LearningDetector:
         learning_detector.classifier.intercepts_[0][0] = data.bias
         return learning_detector
 
+    def _get_scores(self, xs):
+        if self.logging_func is None:
+            return np.array([[detector.fit_score(x) for detector in self.detectors] for x in xs], np.float32)
+        else:
+            scores = []
+            for i in range(len(xs)):
+                scores.append([detector.fit_score(xs[i]) for detector in self.detectors])
+                self.logging_func(i)
+            return np.array(scores, np.float32)
+
     def fit(self, xs, ys):
-        scores = np.array([[detector.fit_score(x) for detector in self.detectors] for x in xs], np.float32)
+        scores = self._get_scores(xs)
         ys = ys[~np.isnan(scores).any(axis=1)]
         scores = scores[~np.isnan(scores).any(axis=1)]
         self.classifier.fit(scores, ys)
 
     def predict(self, xs):
-        scores = np.array([[detector.fit_score(x) for detector in self.detectors] for x in xs], np.float32)
+        scores = self._get_scores(xs)
         scores[np.isnan(scores)] = 0
         return self.classifier.predict(scores)
