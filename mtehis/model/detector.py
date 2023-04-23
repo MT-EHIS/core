@@ -62,3 +62,8 @@ class LearningDetector:
         scores = self._get_scores(xs)
         scores[np.isnan(scores)] = 0
         return self.classifier.predict(scores)
+
+    def predict_with_scores(self, xs):
+        scores = self._get_scores(xs)
+        scores[np.isnan(scores)] = 0
+        return self.classifier.predict(scores), scores
